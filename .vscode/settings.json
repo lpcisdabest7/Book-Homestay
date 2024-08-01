@@ -1,0 +1,22 @@
+{
+    "cSpell.words": [
+        "Bluemix",
+        "bssid",
+        "googleusercontent",
+        "Injectable",
+        "loginhaha",
+        "microservices",
+        "nestjs",
+        "postgres"
+    ],
+    "editor.detectIndentation": false,
+    "rift.autostart": false,
+    "i18n-ally.localesPaths": ["src/i18n"],
+    "workbench.iconTheme": "material-icon-theme",
+    "eslint.nodePath": "eslintrc.js",
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": "explicit"
+    },
+    "eslint.validate": ["javascript", "typescript"]
+  }
+   
