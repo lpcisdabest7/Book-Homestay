@@ -10,11 +10,11 @@ import { OAuth2Client, TokenPayload } from 'google-auth-library';
 import { Repository } from 'typeorm';
 
 import { UserEntity } from '../../modules/user/entity/user.entity';
-import { RoleEnum } from '../../roles/roles.enum';
 import { ApiConfigService } from '../../shared/services/api-config.service';
 import { LoginResponseType } from '../types/login-response.type';
 import { TypeTokenEnum } from './auth.enum';
 import { AuthGoogleLoginDto } from './dto/auth-google-login.dto';
+import { RoleType } from '../../../src/constants';
 
 @Injectable()
 export class AuthGoogleService {
@@ -49,7 +49,6 @@ export class AuthGoogleService {
   }
 
   async validateSocialLogin(payload: TokenPayload): Promise<LoginResponseType> {
-    console.log(payload);
     try {
       let user = await this.userRepository.findOne({
         where: { email: payload.email },
@@ -57,7 +56,7 @@ export class AuthGoogleService {
 
       if (!user) {
         user = this.userRepository.create({
-          role: RoleEnum[RoleEnum.user],
+          role: RoleType.USER,
           email: payload.email,
           username: payload.name,
           image: payload.picture,

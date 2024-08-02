@@ -1,3 +1,7 @@
+import {
+  CURRENCY,
+  StatusBooking,
+} from '../../../../src/modules/homestay/enum/homestay.enum';
 import { HomeStayEntity } from '../../../../src/modules/homestay/entity/homestay.entity';
 import { UserEntity } from '../../../../src/modules/user/entity/user.entity';
 import {
@@ -17,28 +21,40 @@ export class BookingEntity {
   @PrimaryGeneratedColumn('uuid')
   id: number;
 
-  @ManyToOne(() => UserEntity, { nullable: false })
+  @ManyToOne(() => UserEntity, { nullable: true })
   @JoinColumn({ name: 'userId' })
-  userId: UserEntity;
+  userId: string;
 
-  @ManyToOne(() => HomeStayEntity, { nullable: false })
+  @ManyToOne(() => HomeStayEntity, { nullable: true })
   @JoinColumn({ name: 'homestayId' })
-  homestayId: HomeStayEntity;
+  homestayId: string;
 
-  @Column({ type: 'timestamp', nullable: false })
+  @Column({ type: 'timestamp', nullable: true })
   checkIn: Date;
 
-  @Column({ type: 'timestamp', nullable: false })
+  @Column({ type: 'timestamp', nullable: true })
   checkOut: Date;
+
+  @Column({ type: 'date', nullable: false })
+  availableFrom: Date;
+
+  @Column({ type: 'date', nullable: false })
+  availableTo: Date;
 
   @Column({ type: 'int', nullable: false })
   guestCount: number;
 
-  @Column({ type: 'float', nullable: false })
-  totalPrice: number;
+  @Column({ type: 'jsonb', nullable: true })
+  totalPrice: {
+    amount: number;
+    currency: CURRENCY;
+  };
 
-  @Column({ type: 'varchar', length: 50, default: 'pending' })
-  status: string; // Options: 'pending', 'success', 'cancel'
+  @Column({ type: 'varchar', length: 50, nullable: true })
+  status: StatusBooking;
+
+  @Column({ type: 'boolean', default: false })
+  isBooking: boolean;
 
   @CreateDateColumn()
   createdAt: Date;

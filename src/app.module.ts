@@ -13,7 +13,7 @@ import { AuthGoogleModule } from './modules/auth-google/auth-google.module';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './filters/common.error-filter';
 import { HomeStayModule } from './modules/homestay/homestay.module';
-import { HomeStayAvailabilityModule } from './modules/homestay-availability/homestay-availability.module';
+// import { HomeStayAvailabilityModule } from './modules/homestay-availability/homestay-availability.module';
 import { BookingModule } from './modules/booking/booking.module';
 
 @Module({
@@ -38,7 +38,7 @@ import { BookingModule } from './modules/booking/booking.module';
     UserModule,
     AuthGoogleModule,
     HomeStayModule,
-    HomeStayAvailabilityModule,
+    // HomeStayAvailabilityModule,
     BookingModule,
   ],
   providers: [

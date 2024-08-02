@@ -14,23 +14,35 @@ export class HomeStayService {
   constructor(
     private readonly homestayRepo: HomestayRepository,
     @InjectRepository(HomeStayEntity)
-    private readonly homestayRepository: Repository<HomeStayEntity>,
+    private readonly homestayModel: Repository<HomeStayEntity>,
   ) {}
 
   async create(dto: CreateHomestayDto) {
-    const entity = this.homestayRepository.create(dto);
-    return await this.homestayRepository.save(entity);
+    const entity = this.homestayModel.create(dto);
+    return await this.homestayModel.save(entity);
   }
 
   async getAll() {
-    return await this.homestayRepository.find();
+    return await this.homestayModel.find({
+      select: [
+        'description',
+        'images',
+        'price',
+        'address',
+        'bedroomOption',
+        'bathroomOption',
+        'livingRoomOption',
+        'maxGuest',
+        'name',
+      ],
+    });
   }
 
   async update(
     homestayId: string,
     dto: UpdateHomestayDto,
   ): Promise<HomeStayEntity> {
-    const homestay = await this.homestayRepository.findOne({
+    const homestay = await this.homestayModel.findOne({
       where: { id: homestayId },
     });
     if (!homestay) {
@@ -38,13 +50,13 @@ export class HomeStayService {
     }
 
     assignIn(homestay, dto);
-    await this.homestayRepository.save(homestay);
+    await this.homestayModel.save(homestay);
 
     return homestay;
   }
 
   async delete(homestayId: string) {
-    return await this.homestayRepository.delete({ id: homestayId });
+    return await this.homestayModel.delete({ id: homestayId });
   }
 
   async searchHomestays(query: QueryListHomestayDto) {
@@ -53,6 +65,10 @@ export class HomeStayService {
         latitude: query.latitude,
         longitude: query.longitude,
         radius: query.radius,
+        minPrice: query.minPrice,
+        maxPrice: query.maxPrice,
+        checkInDate: query.checkInDate,
+        checkOutDate: query.checkOutDate,
         maxGuest: query.maxGuest !== undefined ? query.maxGuest : undefined,
       },
       skip: query.skip,

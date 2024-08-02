@@ -11,7 +11,7 @@ import {
 } from '../../../decorators/field.decorators';
 import { PriceDto } from './homestay.create.dto';
 import { Type } from 'class-transformer';
-import { CountryCode } from '../enum/homestay-country-code.enum';
+import { CountryCode } from '../enum/homestay.enum';
 
 export class UpdateHomestayDto {
   @IsOptional()

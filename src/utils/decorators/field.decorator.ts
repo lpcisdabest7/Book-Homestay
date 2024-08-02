@@ -1,6 +1,6 @@
 import { applyDecorators } from '@nestjs/common';
 import { ApiProperty, type ApiPropertyOptions } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
   IsDate,
@@ -9,6 +9,7 @@ import {
   IsEnum,
   IsInt,
   IsNumber,
+  IsOptional,
   IsPositive,
   IsString,
   IsUrl,
@@ -21,24 +22,25 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-import { type Constructor } from '../types';
-import { ApiEnumProperty, ApiUUIDProperty } from './property.decorators';
+import { ApiEnumProperty, ApiUUIDProperty } from './property.decorator';
 import {
   PhoneNumberSerializer,
   ToArray,
   ToBoolean,
   ToLowerCase,
   ToUpperCase,
-} from './transform.decorators';
+} from './transform.decorator';
 import {
   IsNullable,
   IsPassword,
   IsPhoneNumber,
   IsTmpKey as IsTemporaryKey,
   IsUndefinable,
-} from './validator.decorators';
+} from './validator.decorator';
+import { Constructor } from '../../../src/types';
+import { isNil } from 'lodash';
 
-type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>;
+// type RequireField<T, K extends keyof T> = T & Required<Pick<T, K>>;
 
 interface IFieldOptions {
   each?: boolean;
@@ -211,40 +213,6 @@ export function BooleanFieldOptional(
   return applyDecorators(
     IsUndefinable(),
     BooleanField({ required: false, ...options }),
-  );
-}
-
-export function TranslationsField(
-  options: RequireField<Omit<ApiPropertyOptions, 'isArray'>, 'type'> &
-    IFieldOptions,
-): PropertyDecorator {
-  const decorators = [
-    ValidateNested({
-      each: true,
-    }),
-    Type(() => options.type as FunctionConstructor),
-  ];
-
-  if (options.nullable) {
-    decorators.push(IsNullable());
-  } else {
-    decorators.push(NotEquals(null));
-  }
-
-  if (options.swagger !== false) {
-    decorators.push(ApiProperty({ isArray: true, ...options }));
-  }
-
-  return applyDecorators(...decorators);
-}
-
-export function TranslationsFieldOptional(
-  options: RequireField<Omit<ApiPropertyOptions, 'isArray'>, 'type'> &
-    IFieldOptions,
-): PropertyDecorator {
-  return applyDecorators(
-    IsUndefinable(),
-    TranslationsField({ required: false, ...options }),
   );
 }
 
@@ -486,16 +454,6 @@ export function URLFieldOptional(
   );
 }
 
-export function now() {
-  return new Date();
-}
-
-export function oneDayLater() {
-  const date = new Date();
-  date.setDate(date.getDate() + 1);
-  return date;
-}
-
 export function DateField(
   options: Omit<ApiPropertyOptions, 'type'> & IFieldOptions = {},
 ): PropertyDecorator {
@@ -520,5 +478,12 @@ export function DateFieldOptional(
   return applyDecorators(
     IsUndefinable(),
     DateField({ ...options, required: false }),
+  );
+}
+
+export function DefaultValue<T>(defaultValue: T): PropertyDecorator {
+  return applyDecorators(
+    IsOptional,
+    Transform(({ value }) => (isNil(value) ? defaultValue : value)),
   );
 }

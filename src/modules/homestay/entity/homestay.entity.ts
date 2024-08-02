@@ -8,8 +8,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { CURRENCY } from '../enum/homestay-currency.enum';
-import { CountryCode } from '../enum/homestay-country-code.enum';
+import { CountryCode, CURRENCY } from '../enum/homestay.enum';
 
 @Entity({
   name: 'homestays',

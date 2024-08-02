@@ -7,9 +7,8 @@ import {
   IsEnum,
   ValidateNested,
 } from 'class-validator';
-import { CURRENCY } from '../enum/homestay-currency.enum';
 import { Type } from 'class-transformer';
-import { CountryCode } from '../enum/homestay-country-code.enum';
+import { CountryCode, CURRENCY } from '../enum/homestay.enum';
 
 export class PriceDto {
   @IsNumber()
