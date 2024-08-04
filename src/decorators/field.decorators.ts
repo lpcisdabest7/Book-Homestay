@@ -522,3 +522,34 @@ export function DateFieldOptional(
     DateField({ ...options, required: false }),
   );
 }
+
+export function IsDateRangeValid(validationOptions?: ValidationOptions) {
+  return function (object: Object, propertyName: string) {
+    registerDecorator({
+      name: 'isDateRangeValid',
+      target: object.constructor,
+      propertyName: propertyName,
+      options: validationOptions,
+      validator: {
+        validate(value: any, args: ValidationArguments) {
+          const object = args.object as any;
+          const checkInDate = object.checkInDate;
+          const checkOutDate = object.checkOutDate;
+
+          // If checkInDate is not provided, there's no need to validate checkOutDate
+          if (!checkInDate) return true;
+
+          // Validate that checkOutDate is after checkInDate
+          if (checkOutDate instanceof Date && checkInDate instanceof Date) {
+            return checkOutDate > checkInDate;
+          }
+
+          return false;
+        },
+        defaultMessage(args: ValidationArguments) {
+          return 'checkOutDate must be after checkInDate';
+        },
+      },
+    });
+  };
+}
