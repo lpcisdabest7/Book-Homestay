@@ -2,7 +2,6 @@ import { Order } from '../../constants';
 import {
   EnumFieldOptional,
   NumberFieldOptional,
-  StringFieldOptional,
 } from '../../decorators/field.decorators';
 
 export class PageOptionsDto {
@@ -29,7 +28,4 @@ export class PageOptionsDto {
   get skip(): number {
     return (this.page - 1) * this.take;
   }
-
-  @StringFieldOptional()
-  readonly q?: string;
 }

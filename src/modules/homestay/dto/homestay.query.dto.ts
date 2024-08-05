@@ -1,4 +1,4 @@
-import { Min, MinDate, ValidateIf } from 'class-validator';
+import { Min, MinDate } from 'class-validator';
 import { PageOptionsDto } from '../../../common/dto/page-options.dto';
 import {
   DateFieldOptional,

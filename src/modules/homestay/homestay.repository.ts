@@ -7,7 +7,7 @@ import { HomeStayEntity } from './entity/homestay.entity';
 export class HomestayRepository {
   constructor(private readonly dataSource: DataSource) {}
 
-  async paginate(args: {
+  async paginateGeoMeTries(args: {
     where: {
       latitude: number;
       longitude: number;
@@ -34,14 +34,14 @@ export class HomestayRepository {
         'h.longitude AS longitude',
         'h.maxGuest AS maxGuest',
         `ST_Distance(
-          ST_Transform(ST_SetSRID(ST_MakePoint(h.longitude, h.latitude), 4326), ${srid}),
+          ST_Transform(ST_SetSRID((h.geog), 4326), ${srid}),
           ST_Transform(ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326), ${srid})
         ) as distance`,
       ])
       .leftJoin('bookings', 'b', 'h.id = b.homestayId')
       .where(
         `ST_DWithin(
-          ST_Transform(ST_SetSRID(ST_MakePoint(h.longitude, h.latitude), 4326), ${srid}),
+          ST_Transform(ST_SetSRID((h.geog), 4326), ${srid}),
           ST_Transform(ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326), ${srid}),
           :radius
         )`,
@@ -98,7 +98,6 @@ export class HomestayRepository {
     }
 
     const itemCount = await queryBuilder.clone().getCount();
-
     const items = await queryBuilder
       .limit(args.take)
       .offset(args.skip)

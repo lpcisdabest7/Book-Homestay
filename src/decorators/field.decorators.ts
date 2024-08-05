@@ -18,7 +18,10 @@ import {
   Min,
   MinLength,
   NotEquals,
+  registerDecorator,
   ValidateNested,
+  ValidationArguments,
+  ValidationOptions,
 } from 'class-validator';
 
 import { type Constructor } from '../types';
@@ -524,7 +527,7 @@ export function DateFieldOptional(
 }
 
 export function IsDateRangeValid(validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: any, propertyName: string) {
     registerDecorator({
       name: 'isDateRangeValid',
       target: object.constructor,
@@ -546,7 +549,7 @@ export function IsDateRangeValid(validationOptions?: ValidationOptions) {
 
           return false;
         },
-        defaultMessage(args: ValidationArguments) {
+        defaultMessage() {
           return 'checkOutDate must be after checkInDate';
         },
       },

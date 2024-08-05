@@ -60,7 +60,7 @@ export class HomeStayService {
   }
 
   async searchHomestays(query: QueryListHomestayDto) {
-    const { items, itemCount } = await this.homestayRepo.paginate({
+    const { items, itemCount } = await this.homestayRepo.paginateGeoMeTries({
       where: {
         latitude: query.latitude,
         longitude: query.longitude,

@@ -33,16 +33,22 @@ export class HomestayRepository {
         'h.latitude AS latitude',
         'h.longitude AS longitude',
         'h.maxGuest AS maxGuest',
-        `ST_Distance(h.geog, ST_SetSRID(ST_MakePoint(:longitude, :latitude), :srid)) as distance`,
+        `ST_Distance(
+          ST_Transform(ST_SetSRID(ST_MakePoint(h.longitude, h.latitude), 4326), ${srid}),
+          ST_Transform(ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326), ${srid})
+        ) as distance`,
       ])
       .leftJoin('bookings', 'b', 'h.id = b.homestayId')
       .where(
-        `ST_DWithin(h.geog, ST_SetSRID(ST_MakePoint(:longitude, :latitude), :srid), :radius)`,
+        `ST_DWithin(
+          ST_Transform(ST_SetSRID(ST_MakePoint(h.longitude, h.latitude), 4326), ${srid}),
+          ST_Transform(ST_SetSRID(ST_MakePoint(:longitude, :latitude), 4326), ${srid}),
+          :radius
+        )`,
         {
           longitude: args.where.longitude,
           latitude: args.where.latitude,
           radius: args.where.radius,
-          srid,
         },
       );
 
