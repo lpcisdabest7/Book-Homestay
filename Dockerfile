@@ -1,5 +1,5 @@
 # Nodejs
-FROM node:18 AS node
+FROM node:20.10.0 As development
 
 RUN mkdir -p /usr/src/app
 

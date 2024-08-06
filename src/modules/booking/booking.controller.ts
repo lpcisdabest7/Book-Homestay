@@ -4,6 +4,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  Param,
   Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
@@ -31,5 +32,11 @@ export class BookingController {
   @HttpCode(HttpStatus.OK)
   async getAll() {
     return await this.bookingService.getAll();
+  }
+
+  @Get('/:id')
+  @HttpCode(HttpStatus.OK)
+  async getById(@Param('id') id: string) {
+    return await this.bookingService.getById(id);
   }
 }

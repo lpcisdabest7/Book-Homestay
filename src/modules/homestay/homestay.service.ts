@@ -8,6 +8,8 @@ import { UpdateHomestayDto } from './dto/homestay.update.dto';
 import { QueryListHomestayDto } from './dto/homestay.query.dto';
 import { HomestayRepository } from './homestay.repository';
 import { PageMetaDto } from '../../../src/common/dto/page-meta.dto';
+import { InjectRedis } from '@liaoliaots/nestjs-redis';
+import { Redis } from 'ioredis';
 
 @Injectable()
 export class HomeStayService {
@@ -15,6 +17,8 @@ export class HomeStayService {
     private readonly homestayRepo: HomestayRepository,
     @InjectRepository(HomeStayEntity)
     private readonly homestayModel: Repository<HomeStayEntity>,
+
+    @InjectRedis() private readonly clientRedis: Redis,
   ) {}
 
   async create(dto: CreateHomestayDto) {
@@ -23,19 +27,40 @@ export class HomeStayService {
   }
 
   async getAll() {
-    return await this.homestayModel.find({
-      select: [
-        'description',
-        'images',
-        'price',
-        'address',
-        'bedroomOption',
-        'bathroomOption',
-        'livingRoomOption',
-        'maxGuest',
-        'name',
-      ],
-    });
+    let homestays = await this.getCachedHomestays('homestays');
+    if (!homestays) {
+      homestays = await this.homestayModel.find({
+        select: [
+          'description',
+          'images',
+          'price',
+          'address',
+          'bedroomOption',
+          'bathroomOption',
+          'livingRoomOption',
+          'maxGuest',
+          'name',
+        ],
+      });
+      await this.cacheHomestays('homestays', homestays);
+    }
+    return homestays;
+  }
+
+  async getById(homestayId_: string) {
+    let inforHomestay = await this.getCachedHomestays(
+      `homestayId_${homestayId_}`,
+    );
+    if (!inforHomestay) {
+      inforHomestay = await this.homestayModel.findOneBy({ id: homestayId_ });
+      if (!inforHomestay) {
+        throw new NotFoundException(
+          `HomestayId_ with id ${homestayId_} not found`,
+        );
+      }
+      await this.cacheHomestays(`homestayId_${homestayId_}`, inforHomestay);
+    }
+    return inforHomestay;
   }
 
   async update(
@@ -90,5 +115,14 @@ export class HomeStayService {
       meta,
       items,
     };
+  }
+
+  async getCachedHomestays(cacheKey: string) {
+    const cachedHomestays = await this.clientRedis.get(cacheKey);
+    return cachedHomestays ? JSON.parse(cachedHomestays) : null;
+  }
+
+  async cacheHomestays(cacheKey: string, homestays: HomeStayEntity) {
+    await this.clientRedis.set(cacheKey, JSON.stringify(homestays), 'EX', 3600);
   }
 }

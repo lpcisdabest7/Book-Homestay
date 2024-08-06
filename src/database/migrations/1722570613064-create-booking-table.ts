@@ -5,7 +5,7 @@ export class CreateBookingTable1722570613064 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `CREATE TABLE "bookings" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "checkIn" TIMESTAMP, "checkOut" TIMESTAMP, "availableFrom" date NOT NULL, "availableTo" date NOT NULL, "guestCount" integer NOT NULL, "totalPrice" jsonb, "status" character varying(50), "isBooking" boolean NOT NULL DEFAULT false, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "userId" uuid, "homestayId" uuid, CONSTRAINT "PK_bee6805982cc1e248e94ce94957" PRIMARY KEY ("id"))`,
+      `CREATE TABLE "bookings" ("id" uuid NOT NULL DEFAULT uuid_generate_v4(), "checkIn" TIMESTAMP, "checkOut" TIMESTAMP, "availableFrom" date NOT NULL, "availableTo" date NOT NULL, "guestCount" integer NOT NULL, "totalPrice" jsonb, "status" character varying(50), "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), "userId" uuid, "homestayId" uuid, CONSTRAINT "PK_bee6805982cc1e248e94ce94957" PRIMARY KEY ("id"))`,
     );
     await queryRunner.query(
       `ALTER TABLE "bookings" ADD CONSTRAINT "FK_38a69a58a323647f2e75eb994de" FOREIGN KEY ("userId") REFERENCES "users"("id") `,

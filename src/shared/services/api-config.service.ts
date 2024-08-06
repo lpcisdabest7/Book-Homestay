@@ -100,6 +100,16 @@ export class ApiConfigService {
     };
   }
 
+  get redis() {
+    return {
+      host: this.getString('REDIS_HOST'),
+      port: +this.getNumber('REDIS_PORT'),
+      db: +this.getNumber('REDIS_DB'),
+      username: this.getString('REDIS_USERNAME'),
+      password: this.getString('REDIS_PASSWORD'),
+    };
+  }
+
   private get(key: string): string {
     const value = this.configService.get<string>(key);
 

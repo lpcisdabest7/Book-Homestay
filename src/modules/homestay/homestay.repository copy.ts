@@ -64,7 +64,6 @@ export class HomestayRepository {
           SELECT 1
           FROM bookings b
           WHERE b.homestayId = h.id
-            AND b.isBooking = true
             AND (
               (b.availableFrom <= :checkOutDate AND b.availableTo >= :checkInDate)
             )

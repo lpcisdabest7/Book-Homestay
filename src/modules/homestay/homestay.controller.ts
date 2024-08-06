@@ -9,7 +9,6 @@ import {
   Patch,
   Post,
   Query,
-  SerializeOptions,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CreateHomestayDto } from './dto/homestay.create.dto';
@@ -26,18 +25,30 @@ import { QueryListHomestayDto } from './dto/homestay.query.dto';
 export class HomeStayController {
   constructor(private readonly homeStayService: HomeStayService) {}
 
-  @SerializeOptions({
-    groups: ['me'],
-  })
   @Post()
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: CreateHomestayDto): Promise<HomeStayEntity> {
     return await this.homeStayService.create(dto);
   }
 
-  @SerializeOptions({
-    groups: ['me'],
-  })
+  @Get('getAll')
+  @HttpCode(HttpStatus.OK)
+  async getAll() {
+    return await this.homeStayService.getAll();
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get()
+  get(@Query() query: QueryListHomestayDto) {
+    return this.homeStayService.searchHomestays(query);
+  }
+
+  @Get('/:id')
+  @HttpCode(HttpStatus.OK)
+  async getById(@Param('id') id: string) {
+    return await this.homeStayService.getById(id);
+  }
+
   @Patch('/:homestayId')
   @HttpCode(HttpStatus.OK)
   async update(
@@ -47,27 +58,9 @@ export class HomeStayController {
     return await this.homeStayService.update(homestayId, dto);
   }
 
-  @SerializeOptions({
-    groups: ['me'],
-  })
-  @Get('getAll')
-  @HttpCode(HttpStatus.OK)
-  async getAll() {
-    return await this.homeStayService.getAll();
-  }
-
-  @SerializeOptions({
-    groups: ['me'],
-  })
   @Delete('/:homestayId')
   @HttpCode(HttpStatus.OK)
   async delete(@Param('homestayId') homestayId: string) {
     await this.homeStayService.delete(homestayId);
-  }
-
-  @HttpCode(HttpStatus.OK)
-  @Get()
-  get(@Query() query: QueryListHomestayDto) {
-    return this.homeStayService.searchHomestays(query);
   }
 }

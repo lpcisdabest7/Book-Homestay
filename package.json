@@ -29,6 +29,7 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.485.0",
     "@google-cloud/text-to-speech": "^5.0.2",
+    "@liaoliaots/nestjs-redis": "^9.0.5",
     "@nestjs/axios": "^3.0.1",
     "@nestjs/bull": "^10.1.0",
     "@nestjs/common": "^10.3.0",

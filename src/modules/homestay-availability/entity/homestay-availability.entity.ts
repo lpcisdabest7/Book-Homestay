@@ -26,9 +26,6 @@
 //   @Column({ type: 'date', nullable: false })
 //   availableTo: Date;
 
-//   @Column({ type: 'boolean', default: false })
-//   isBooking: boolean;
-
 //   @CreateDateColumn()
 //   createdAt: Date;
 

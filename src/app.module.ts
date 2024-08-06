@@ -15,6 +15,7 @@ import { HttpExceptionFilter } from './filters/common.error-filter';
 import { HomeStayModule } from './modules/homestay/homestay.module';
 // import { HomeStayAvailabilityModule } from './modules/homestay-availability/homestay-availability.module';
 import { BookingModule } from './modules/booking/booking.module';
+import { CacheModule } from './modules/cache/cache.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { BookingModule } from './modules/booking/booking.module';
     HomeStayModule,
     // HomeStayAvailabilityModule,
     BookingModule,
+    CacheModule,
   ],
   providers: [
     {

@@ -19,7 +19,7 @@ import {
 })
 export class BookingEntity {
   @PrimaryGeneratedColumn('uuid')
-  id: number;
+  id: string;
 
   @ManyToOne(() => UserEntity, { nullable: true })
   @JoinColumn({ name: 'userId' })
@@ -52,9 +52,6 @@ export class BookingEntity {
 
   @Column({ type: 'varchar', length: 50, nullable: true })
   status: StatusBooking;
-
-  @Column({ type: 'boolean', default: false })
-  isBooking: boolean;
 
   @CreateDateColumn()
   createdAt: Date;
